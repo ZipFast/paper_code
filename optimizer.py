@@ -43,6 +43,7 @@ class Optimizer:
         best_score = 0
         for n in tqdm(range(n_iter)):
             sample = self.suggest()
+            print(sample)
             score = self.observe(sample)
             if score > best_score:
                 best_sample = sample
@@ -50,16 +51,20 @@ class Optimizer:
         return best_sample
 
     def observe(self, params):
-
+        print(params)
         # Create hash (using np.nan's instead of None's)
         params = {i: np.nan if j is None else j for i, j in params.items()}
+        print(params)
         hash = hashlib.md5(str(pd.Series(params).values).encode()).hexdigest()[:8]
 
         # Convert params (using None's instead of np.nan's)
         params = {i: None if isinstance(j, np.float) and np.isnan(j) else j for i, j in params.items()}
+        print(params)
 
         # Setup pipeline
-        pipeline = clone(self.pipeline).set_params(**params)
+        pipeline = clone(self.pipeline)
+        print(pipeline.get_params().keys())
+        pipeline.set_params(**params)
         scores = cross_val_score(estimator=pipeline, X=self.X, y=self.y, cv=self.cv, scoring=self.metric)
         score = np.mean(scores)
         self.observed_X.append(params)

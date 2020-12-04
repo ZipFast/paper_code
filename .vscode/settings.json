@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/mnt/d/wsl/miniconda3/envs/automl_env/bin/python",
+    "jupyter.jupyterServerType": "local"
+}
